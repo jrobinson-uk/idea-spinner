@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Picker tests</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 24px; background: #fff; color: #111; }
+    .pass { color: #0a7a3a; } .fail { color: #b00020; font-weight: bold; }
+    #summary { font-size: 1.3rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Picker tests</h1>
+  <p id="summary">Running…</p>
+  <ul id="results"></ul>
+  <script type="module">
+    import { pick, poolFor, fillerStrip, seededRandom } from "../js/picker.js";
+
+    const data = await fetch("../data/ingredients.json").then((r) => r.json());
+    const { ingredients: deck, wheels } = data;
+    const results = [];
+    const test = (name, fn) => {
+      try { fn(); results.push([name, true]); }
+      catch (e) { results.push([name, false, e.message]); }
+    };
+    const assert = (cond, msg) => { if (!cond) throw new Error(msg); };
+    const ids = (combo) => wheels.map((w) => combo[w.id].id);
+
+    test("every ingredient has a known wheel and an image file name", () => {
+      const wheelIds = new Set(wheels.map((w) => w.id));
+      for (const i of deck) {
+        assert(wheelIds.has(i.wheel), `${i.id} has unknown wheel ${i.wheel}`);
+        assert(/^[a-z0-9-]+$/.test(i.id), `${i.id} is not a valid file name`);
+      }
+      assert(new Set(deck.map((i) => i.id)).size === deck.length, "duplicate ids");
+    });
+
+    test("each wheel's item comes from that wheel", () => {
+      const rnd = seededRandom(1);
+      for (let n = 0; n < 500; n++) {
+        const combo = pick(deck, wheels, new Set(), {}, {}, rnd);
+        for (const w of wheels) assert(combo[w.id].wheel === w.id, `${combo[w.id].id} on ${w.id}`);
+      }
+    });
+
+    test("no item appears twice in one combination", () => {
+      const rnd = seededRandom(2);
+      for (let n = 0; n < 500; n++) {
+        const combo = pick(deck, wheels, new Set(), {}, {}, rnd);
+        assert(new Set(ids(combo)).size === wheels.length, ids(combo).join());
+      }
+    });
+
+    test("AI items never appear when the toggle is off", () => {
+      const rnd = seededRandom(3);
+      for (let n = 0; n < 1000; n++) {
+        const combo = pick(deck, wheels, new Set(), {}, { includeAI: false }, rnd);
+        for (const w of wheels) assert(!combo[w.id].tags.includes("ai"), combo[w.id].id);
+      }
+    });
+
+    test("AI items do appear when the toggle is on", () => {
+      const rnd = seededRandom(4);
+      const seen = new Set();
+      for (let n = 0; n < 1000; n++) {
+        const combo = pick(deck, wheels, new Set(), {}, { includeAI: true }, rnd);
+        for (const w of wheels) seen.add(combo[w.id].id);
+      }
+      assert(seen.has("ai-classifier") && seen.has("generative-ai"), "AI items never picked");
+    });
+
+    test("locked wheels never change", () => {
+      const rnd = seededRandom(5);
+      let combo = pick(deck, wheels, new Set(), {}, {}, rnd);
+      const locked = new Set(["input", "wildcard"]);
+      for (let n = 0; n < 300; n++) {
+        const next = pick(deck, wheels, locked, combo, {}, rnd);
+        assert(next.input === combo.input && next.wildcard === combo.wildcard, "locked item changed");
+        combo = next;
+      }
+    });
+
+    test("unlocked wheels always change on a re-spin", () => {
+      const rnd = seededRandom(6);
+      let combo = pick(deck, wheels, new Set(), {}, {}, rnd);
+      for (let n = 0; n < 500; n++) {
+        const next = pick(deck, wheels, new Set(["output"]), combo, {}, rnd);
+        assert(next.input.id !== combo.input.id && next.wildcard.id !== combo.wildcard.id, "repeat");
+        combo = next;
+      }
+    });
+
+    test("items come up roughly evenly over 1,000 spins", () => {
+      const counts = {};
+      const rnd = seededRandom(7);
+      for (let n = 0; n < 1000; n++) {
+        const combo = pick(deck, wheels, new Set(), {}, {}, rnd);
+        for (const w of wheels) counts[combo[w.id].id] = (counts[combo[w.id].id] ?? 0) + 1;
+      }
+      for (const w of wheels) {
+        const pool = poolFor(deck, w.id, {});
+        const expected = 1000 / pool.length;
+        for (const item of pool) {
+          const c = counts[item.id] ?? 0;
+          assert(c > expected * 0.6 && c < expected * 1.4, `${item.id}: ${c} vs ~${expected.toFixed(0)}`);
+        }
+      }
+    });
+
+    test("filler strip never repeats back-to-back", () => {
+      const strip = fillerStrip(poolFor(deck, "input", {}), 200, seededRandom(8));
+      for (let i = 1; i < strip.length; i++) assert(strip[i] !== strip[i - 1], `repeat at ${i}`);
+    });
+
+    const failed = results.filter((r) => !r[1]).length;
+    document.getElementById("summary").textContent =
+      failed ? `${failed} of ${results.length} failed` : `All ${results.length} tests passed`;
+    document.getElementById("summary").className = failed ? "fail" : "pass";
+    document.getElementById("results").innerHTML = results
+      .map(([name, ok, msg]) => `<li class="${ok ? "pass" : "fail"}">${ok ? "✓" : "✗"} ${name}${msg ? ` — ${msg}` : ""}</li>`)
+      .join("");
+  </script>
+</body>
+</html>
