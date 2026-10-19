@@ -1,0 +1,39 @@
+{
+  "wheels": [
+    { "id": "input", "label": "Input" },
+    { "id": "output", "label": "Output" },
+    { "id": "wildcard", "label": "Wildcard" }
+  ],
+  "ingredients": [
+    { "id": "button", "name": "Button", "wheel": "input", "hint": "Something happens when you press it", "tags": [] },
+    { "id": "light-sensor", "name": "Light sensor", "wheel": "input", "hint": "Senses how bright it is", "tags": [] },
+    { "id": "temperature-sensor", "name": "Temperature sensor", "wheel": "input", "hint": "Senses how hot or cold it is", "tags": [] },
+    { "id": "accelerometer", "name": "Accelerometer / tilt", "wheel": "input", "hint": "Senses shaking, tilting and movement", "tags": [] },
+    { "id": "microphone", "name": "Microphone / sound", "wheel": "input", "hint": "Senses how loud it is", "tags": [] },
+    { "id": "distance-sensor", "name": "Distance sensor", "wheel": "input", "hint": "Senses how far away something is", "tags": [] },
+    { "id": "motion-sensor", "name": "Motion sensor (PIR)", "wheel": "input", "hint": "Senses people moving nearby", "tags": [] },
+    { "id": "soil-moisture", "name": "Soil moisture", "wheel": "input", "hint": "Senses how wet the soil is", "tags": [] },
+    { "id": "touch", "name": "Touch", "wheel": "input", "hint": "Senses when you touch something that conducts", "tags": [] },
+    { "id": "compass", "name": "Compass", "wheel": "input", "hint": "Senses which way is north", "tags": [] },
+    { "id": "ai-classifier", "name": "AI classifier", "wheel": "input", "hint": "Recognises images or sounds it has been trained on", "tags": ["ai"] },
+
+    { "id": "led", "name": "LED", "wheel": "output", "hint": "A small light that turns on and off", "tags": [] },
+    { "id": "colour-leds", "name": "Colour LEDs", "wheel": "output", "hint": "A strip of lights that can be any colour", "tags": [] },
+    { "id": "speaker", "name": "Buzzer / speaker", "wheel": "output", "hint": "Makes beeps, tunes and sounds", "tags": [] },
+    { "id": "servo", "name": "Servo", "wheel": "output", "hint": "A motor that turns to an exact angle", "tags": [] },
+    { "id": "motor", "name": "Motor", "wheel": "output", "hint": "Spins round to make things move", "tags": [] },
+    { "id": "led-matrix", "name": "LED matrix", "wheel": "output", "hint": "A grid of lights to show pictures", "tags": [] },
+    { "id": "screen", "name": "Screen", "wheel": "output", "hint": "Shows words, numbers and pictures", "tags": [] },
+    { "id": "generative-ai", "name": "Generative AI", "wheel": "output", "hint": "Creates new text or pictures from a prompt", "tags": ["ai"] },
+
+    { "id": "microbit", "name": "micro:bit", "wheel": "wildcard", "hint": "A pocket-sized computer with built-in sensors", "tags": [] },
+    { "id": "pico", "name": "Raspberry Pi Pico", "wheel": "wildcard", "hint": "A tiny microcontroller board", "tags": [] },
+    { "id": "raspberry-pi", "name": "Raspberry Pi", "wheel": "wildcard", "hint": "A small but full computer", "tags": [] },
+    { "id": "cardboard", "name": "Cardboard", "wheel": "wildcard", "hint": "Cut, fold and build with it", "tags": [] },
+    { "id": "tin-foil", "name": "Tin foil", "wheel": "wildcard", "hint": "Shiny, bendy and conducts electricity", "tags": [] },
+    { "id": "paperclips", "name": "Paperclips", "wheel": "wildcard", "hint": "Bend them, link them, conduct with them", "tags": [] },
+    { "id": "bricks", "name": "Building bricks", "wheel": "wildcard", "hint": "Build a body, a case or a machine", "tags": [] },
+    { "id": "string", "name": "String", "wheel": "wildcard", "hint": "Pull, hang, tie or measure", "tags": [] },
+    { "id": "plastic-bottle", "name": "Plastic bottle", "wheel": "wildcard", "hint": "Hold water, make a body, recycle it", "tags": [] }
+  ]
+}
