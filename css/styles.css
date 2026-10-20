@@ -9,14 +9,16 @@
   --input-tint: #e1f4f1;
   --output: #d4600f;
   --output-tint: #fdeadb;
-  --wildcard: #7448c7;
-  --wildcard-tint: #eee6fb;
+  --process: #2f6bd8;
+  --process-tint: #e2ecfc;
+  --materials: #7448c7;
+  --materials-tint: #eee6fb;
   --red: #e0302c;
   --red-dark: #9e1814;
   --focus: #2266dd;
   --shadow: 0 2px 0 rgba(31, 36, 64, 0.06), 0 10px 30px rgba(31, 36, 64, 0.08);
   --radius: 22px;
-  --reel-h: clamp(250px, 48vh, 460px);
+  --reel-h: clamp(220px, calc(100vh - 500px), 460px);
   --font: "Inclusive Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   color-scheme: light;
 }
@@ -32,8 +34,10 @@
     --input-tint: #17393f;
     --output: #f2914a;
     --output-tint: #3f2a22;
-    --wildcard: #a988ee;
-    --wildcard-tint: #2e2752;
+    --process: #7aa7f5;
+    --process-tint: #1c2c50;
+    --materials: #a988ee;
+    --materials-tint: #2e2752;
     --focus: #7fb0ff;
     --shadow: 0 2px 0 rgba(0, 0, 0, 0.2), 0 10px 30px rgba(0, 0, 0, 0.35);
     color-scheme: dark;
@@ -49,8 +53,10 @@
   --input-tint: #17393f;
   --output: #f2914a;
   --output-tint: #3f2a22;
-  --wildcard: #a988ee;
-  --wildcard-tint: #2e2752;
+  --process: #7aa7f5;
+  --process-tint: #1c2c50;
+  --materials: #a988ee;
+  --materials-tint: #2e2752;
   --focus: #7fb0ff;
   --shadow: 0 2px 0 rgba(0, 0, 0, 0.2), 0 10px 30px rgba(0, 0, 0, 0.35);
   color-scheme: dark;
@@ -128,7 +134,7 @@ main {
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--card-count, 3), minmax(0, 1fr));
   gap: clamp(14px, 2.2vw, 32px);
 }
 
@@ -143,8 +149,10 @@ main {
   overflow: hidden;
   transition: border-color 0.2s, transform 0.2s;
 }
-.card[data-wheel="output"] { --accent: var(--output); --tint: var(--output-tint); }
-.card[data-wheel="wildcard"] { --accent: var(--wildcard); --tint: var(--wildcard-tint); }
+[data-wheel="input"] { --accent: var(--input); --tint: var(--input-tint); }
+[data-wheel="process"] { --accent: var(--process); --tint: var(--process-tint); }
+[data-wheel="output"] { --accent: var(--output); --tint: var(--output-tint); }
+[data-wheel="materials"] { --accent: var(--materials); --tint: var(--materials-tint); }
 
 .card-head {
   display: flex;
@@ -390,9 +398,7 @@ dialog::backdrop { background: rgba(20, 24, 48, 0.55); }
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.deck-input h3 { color: var(--input); }
-.deck-output h3 { color: var(--output); }
-.deck-wildcard h3 { color: var(--wildcard); }
+.deck-group h3 { color: var(--accent); }
 .deck ul {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -414,54 +420,49 @@ dialog::backdrop { background: rgba(20, 24, 48, 0.55); }
 
 /* ---------- Tablet ---------- */
 @media (max-width: 1023px) {
+  :root { --reel-h: clamp(180px, 26vh, 300px); }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .top, main { padding-left: 20px; padding-right: 20px; }
   .tile { padding: 12px; }
   .tile-hint { display: none; }
 }
 
 /* ---------- Phone ---------- */
+/* A 2x2 grid of cards sized to the screen height, so Mix! never falls below the fold. */
 @media (max-width: 639px) {
-  /* Shrink the cards to fit the screen height so Mix! never falls below the fold. */
-  :root { --reel-h: clamp(56px, calc((100vh - 440px) / 3), 108px); }
+  :root { --reel-h: clamp(120px, calc((100vh - 400px) / 2), 200px); }
   @supports (height: 100dvh) {
-    :root { --reel-h: clamp(56px, calc((100dvh - 440px) / 3), 108px); }
+    :root { --reel-h: clamp(120px, calc((100dvh - 400px) / 2), 200px); }
   }
   .top { padding: 14px 16px 0; }
   main { padding: 4px 16px 24px; }
   .intro { margin-bottom: 14px; }
-  .cards { grid-template-columns: 1fr; gap: 12px; }
-  .card-head { padding: 6px 8px 6px 14px; }
-  .card-head h2 { font-size: 0.95rem; }
-  .lock { width: 40px; height: 40px; }
-  .tile {
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 14px;
-    padding: 10px 14px;
-    text-align: left;
-  }
-  .tile { padding: 8px 14px; }
-  .tile-img { height: calc(var(--reel-h) - 16px); width: auto; flex: 0 0 auto; }
-  .tile-name { margin: 0; font-size: 1.25rem; }
-  .card.locked .reel::after { top: auto; bottom: 8px; }
-  .prompt { margin-top: 14px; font-size: 1.15rem; }
-  .controls { margin-top: 10px; }
-  .mix { --size: 104px; }
+  .cards { gap: 10px; }
+  .card { border-width: 2px; }
+  .card-head { padding: 4px 4px 4px 10px; }
+  .card-head h2 { font-size: 0.78rem; letter-spacing: 0.04em; }
+  .lock { width: 34px; height: 34px; border-radius: 10px; }
+  .lock svg { width: 20px; height: 20px; }
+  .tile { gap: 4px; padding: 8px 6px 10px; }
+  .tile-img { height: calc(var(--reel-h) - 60px); }
+  .tile-name { margin: 0; font-size: 1rem; line-height: 1.15; }
+  .card.locked .reel::after { top: 6px; right: 6px; padding: 1px 7px; font-size: 0.65rem; }
+  .prompt { margin-top: 12px; font-size: 1.1rem; }
+  .controls { margin-top: 8px; }
+  .mix { --size: 100px; }
   .key-hint { display: none; }
 }
 
 /* Short phones: drop the intro line and tighten spacing. */
 @media (max-width: 639px) and (max-height: 740px) {
-  :root { --reel-h: clamp(56px, calc((100vh - 380px) / 3), 108px); }
+  :root { --reel-h: clamp(110px, calc((100vh - 300px) / 2), 200px); }
   @supports (height: 100dvh) {
-    :root { --reel-h: clamp(56px, calc((100dvh - 380px) / 3), 108px); }
+    :root { --reel-h: clamp(110px, calc((100dvh - 300px) / 2), 200px); }
   }
   .intro { display: none; }
   .top { padding-top: 10px; }
   .cards { gap: 8px; margin-top: 6px; }
-  .card-head { padding: 3px 6px 3px 14px; }
-  .lock { width: 36px; height: 36px; }
-  .prompt { margin-top: 8px; font-size: 1.05rem; }
+  .prompt { margin-top: 8px; font-size: 1rem; }
   .controls { margin-top: 4px; }
   .mix { --size: 88px; }
 }

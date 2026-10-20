@@ -1,8 +1,9 @@
 {
   "wheels": [
     { "id": "input", "label": "Input" },
+    { "id": "process", "label": "Process" },
     { "id": "output", "label": "Output" },
-    { "id": "wildcard", "label": "Wildcard" }
+    { "id": "materials", "label": "Materials" }
   ],
   "ingredients": [
     { "id": "button", "name": "Button", "wheel": "input", "hint": "Something happens when you press it", "tags": [] },
@@ -26,14 +27,14 @@
     { "id": "screen", "name": "Screen", "wheel": "output", "hint": "Shows words, numbers and pictures", "tags": [] },
     { "id": "generative-ai", "name": "Generative AI", "wheel": "output", "hint": "Creates new text or pictures from a prompt", "tags": ["ai"] },
 
-    { "id": "microbit", "name": "micro:bit", "wheel": "wildcard", "hint": "A pocket-sized computer with built-in sensors", "tags": [] },
-    { "id": "pico", "name": "Raspberry Pi Pico", "wheel": "wildcard", "hint": "A tiny microcontroller board", "tags": [] },
-    { "id": "raspberry-pi", "name": "Raspberry Pi", "wheel": "wildcard", "hint": "A small but full computer", "tags": [] },
-    { "id": "cardboard", "name": "Cardboard", "wheel": "wildcard", "hint": "Cut, fold and build with it", "tags": [] },
-    { "id": "tin-foil", "name": "Tin foil", "wheel": "wildcard", "hint": "Shiny, bendy and conducts electricity", "tags": [] },
-    { "id": "paperclips", "name": "Paperclips", "wheel": "wildcard", "hint": "Bend them, link them, conduct with them", "tags": [] },
-    { "id": "bricks", "name": "Building bricks", "wheel": "wildcard", "hint": "Build a body, a case or a machine", "tags": [] },
-    { "id": "string", "name": "String", "wheel": "wildcard", "hint": "Pull, hang, tie or measure", "tags": [] },
-    { "id": "plastic-bottle", "name": "Plastic bottle", "wheel": "wildcard", "hint": "Hold water, make a body, recycle it", "tags": [] }
+    { "id": "microbit", "name": "micro:bit", "wheel": "process", "hint": "A pocket-sized computer with built-in sensors", "tags": [] },
+    { "id": "pico", "name": "Raspberry Pi Pico", "wheel": "process", "hint": "A tiny microcontroller board", "tags": [] },
+    { "id": "raspberry-pi", "name": "Raspberry Pi", "wheel": "process", "hint": "A small but full computer", "tags": [] },
+    { "id": "cardboard", "name": "Cardboard", "wheel": "materials", "hint": "Cut, fold and build with it", "tags": [] },
+    { "id": "tin-foil", "name": "Tin foil", "wheel": "materials", "hint": "Shiny, bendy and conducts electricity", "tags": [] },
+    { "id": "paperclips", "name": "Paperclips", "wheel": "materials", "hint": "Bend them, link them, conduct with them", "tags": [] },
+    { "id": "bricks", "name": "Building bricks", "wheel": "materials", "hint": "Build a body, a case or a machine", "tags": [] },
+    { "id": "string", "name": "String", "wheel": "materials", "hint": "Pull, hang, tie or measure", "tags": [] },
+    { "id": "plastic-bottle", "name": "Plastic bottle", "wheel": "materials", "hint": "Hold water, make a body, recycle it", "tags": [] }
   ]
 }

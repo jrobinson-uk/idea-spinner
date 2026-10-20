@@ -73,10 +73,10 @@
     test("locked wheels never change", () => {
       const rnd = seededRandom(5);
       let combo = pick(deck, wheels, new Set(), {}, {}, rnd);
-      const locked = new Set(["input", "wildcard"]);
+      const locked = new Set(["input", "materials"]);
       for (let n = 0; n < 300; n++) {
         const next = pick(deck, wheels, locked, combo, {}, rnd);
-        assert(next.input === combo.input && next.wildcard === combo.wildcard, "locked item changed");
+        assert(next.input === combo.input && next.materials === combo.materials, "locked item changed");
         combo = next;
       }
     });
@@ -86,7 +86,7 @@
       let combo = pick(deck, wheels, new Set(), {}, {}, rnd);
       for (let n = 0; n < 500; n++) {
         const next = pick(deck, wheels, new Set(["output"]), combo, {}, rnd);
-        assert(next.input.id !== combo.input.id && next.wildcard.id !== combo.wildcard.id, "repeat");
+        assert(next.input.id !== combo.input.id && next.materials.id !== combo.materials.id && next.process.id !== combo.process.id, "repeat");
         combo = next;
       }
     });
