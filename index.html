@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Idea Spinner</title>
-  <meta name="description" content="Press the button to mix an input, an output and a wildcard, then pitch a physical computing project that uses all three.">
+  <meta name="description" content="Press the button to mix an input, a process, an output and a material, then pitch a physical computing project that uses them all.">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,44 +27,24 @@
   </header>
 
   <main>
-    <p class="intro">Mix three ingredients, then pitch a project that uses them all.</p>
+    <p class="intro">Mix the ingredients, then pitch a project that uses them all.</p>
 
-    <div class="cards">
-      <section class="card" data-wheel="input" aria-labelledby="label-input">
+    <div class="cards" id="cards"></div>
+
+    <template id="card-template">
+      <section class="card">
         <div class="card-head">
-          <h2 id="label-input">Input</h2>
-          <button class="lock" type="button" aria-pressed="false" aria-label="Lock Input">
+          <h2></h2>
+          <button class="lock" type="button" aria-pressed="false">
             <svg class="open" aria-hidden="true"><use href="#icon-lock-open"/></svg>
             <svg class="shut" aria-hidden="true"><use href="#icon-lock"/></svg>
           </button>
         </div>
         <div class="reel"><div class="strip"></div></div>
       </section>
+    </template>
 
-      <section class="card" data-wheel="output" aria-labelledby="label-output">
-        <div class="card-head">
-          <h2 id="label-output">Output</h2>
-          <button class="lock" type="button" aria-pressed="false" aria-label="Lock Output">
-            <svg class="open" aria-hidden="true"><use href="#icon-lock-open"/></svg>
-            <svg class="shut" aria-hidden="true"><use href="#icon-lock"/></svg>
-          </button>
-        </div>
-        <div class="reel"><div class="strip"></div></div>
-      </section>
-
-      <section class="card" data-wheel="wildcard" aria-labelledby="label-wildcard">
-        <div class="card-head">
-          <h2 id="label-wildcard">Wildcard</h2>
-          <button class="lock" type="button" aria-pressed="false" aria-label="Lock Wildcard">
-            <svg class="open" aria-hidden="true"><use href="#icon-lock-open"/></svg>
-            <svg class="shut" aria-hidden="true"><use href="#icon-lock"/></svg>
-          </button>
-        </div>
-        <div class="reel"><div class="strip"></div></div>
-      </section>
-    </div>
-
-    <p id="prompt" class="prompt">Pitch a project that uses all three!</p>
+    <p id="prompt" class="prompt"></p>
 
     <div class="controls">
       <button id="mix" class="mix" type="button">

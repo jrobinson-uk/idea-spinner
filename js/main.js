@@ -2,7 +2,8 @@ import { pick, poolFor, fillerStrip } from "./picker.js";
 import { Reel, imageFor } from "./reel.js";
 import { loadSettings, saveSettings } from "./settings.js";
 
-const STOP_TIMES = [1600, 2200, 2800];
+const STOP_TIMES = [1500, 2000, 2500, 3000];
+const NUMBER_WORDS = ["", "one", "both", "all three", "all four", "all five", "all six"];
 
 const $ = (sel, root = document) => root.querySelector(sel);
 
@@ -41,7 +42,7 @@ function tone(freq, duration, volume = 0.05, type = "sine") {
   }
 }
 const tick = () => tone(900, 0.03, 0.02, "triangle");
-const chime = (i) => tone([523, 659, 784][i] ?? 784, 0.35, 0.06);
+const chime = (i) => tone([523, 659, 784, 1047][i] ?? 1047, 0.35, 0.06);
 
 // --- Setup --------------------------------------------------------------------
 
@@ -50,12 +51,8 @@ async function init() {
   deck = data.ingredients;
   wheels = data.wheels;
 
-  for (const wheel of wheels) {
-    const card = $(`.card[data-wheel="${wheel.id}"]`);
-    reels[wheel.id] = new Reel($(".reel", card));
-    const lock = $(".lock", card);
-    lock.addEventListener("click", () => toggleLock(wheel.id, card, lock));
-  }
+  buildCards();
+  prompt.textContent = promptText();
 
   current = pick(deck, wheels, locked, {}, settings);
   for (const wheel of wheels) reels[wheel.id].show(current[wheel.id]);
@@ -70,6 +67,30 @@ async function init() {
 
   setupSettings();
   updateMixState();
+}
+
+function buildCards() {
+  const container = $("#cards");
+  const template = $("#card-template");
+  container.style.setProperty("--card-count", wheels.length);
+  for (const wheel of wheels) {
+    const card = template.content.firstElementChild.cloneNode(true);
+    card.dataset.wheel = wheel.id;
+    card.setAttribute("aria-labelledby", `label-${wheel.id}`);
+    const heading = $("h2", card);
+    heading.id = `label-${wheel.id}`;
+    heading.textContent = wheel.label;
+    const lock = $(".lock", card);
+    lock.setAttribute("aria-label", `Lock ${wheel.label}`);
+    lock.addEventListener("click", () => toggleLock(wheel.id, card, lock));
+    container.append(card);
+    reels[wheel.id] = new Reel($(".reel", card));
+  }
+}
+
+function promptText() {
+  const all = NUMBER_WORDS[wheels.length] ?? "all of them";
+  return `Pitch a project that uses ${all}!`;
 }
 
 function toggleLock(wheelId, card, lockButton) {
@@ -120,7 +141,7 @@ async function mix() {
   prompt.classList.add("show");
   announcer.textContent =
     wheels.map((w) => `${w.label}: ${current[w.id].name}.`).join(" ") +
-    " Pitch a project that uses all three!";
+    " " + promptText();
 }
 
 // --- Settings -----------------------------------------------------------------
@@ -157,7 +178,8 @@ function renderDeck() {
   container.replaceChildren(
     ...wheels.map((wheel) => {
       const section = document.createElement("section");
-      section.className = `deck-group deck-${wheel.id}`;
+      section.className = "deck-group";
+      section.dataset.wheel = wheel.id;
       const heading = document.createElement("h3");
       heading.textContent = wheel.label;
       const list = document.createElement("ul");
