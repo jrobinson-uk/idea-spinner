@@ -18,7 +18,7 @@
   --focus: #2266dd;
   --shadow: 0 2px 0 rgba(31, 36, 64, 0.06), 0 10px 30px rgba(31, 36, 64, 0.08);
   --radius: 22px;
-  --reel-h: clamp(220px, calc(100vh - 500px), 460px);
+  --reel-h: clamp(190px, calc(100vh - 500px), 460px);
   --font: "Inclusive Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   color-scheme: light;
 }
@@ -249,6 +249,7 @@ main {
 
 .tile {
   height: var(--reel-h);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -266,7 +267,7 @@ main {
 }
 
 /* A picture: one image, or several stacked (board drawing + highlight). */
-.art { position: relative; display: block; }
+.art { position: relative; display: block; flex-shrink: 0; }
 .art img {
   position: absolute;
   inset: 0;
@@ -298,6 +299,8 @@ main {
 }
 .tile-hint {
   margin: 0;
+  min-height: 0;
+  overflow: hidden; /* on short screens the hint gives way before the picture does */
   color: var(--ink-soft);
   font-size: clamp(0.9rem, 1.3vw, 1.1rem);
   max-width: 26ch;
@@ -474,13 +477,17 @@ dialog::backdrop { background: rgba(20, 24, 48, 0.55); }
 
 /* ---------- Tablet ---------- */
 @media (max-width: 1023px) {
-  :root { --reel-h: clamp(180px, 26vh, 300px); }
-  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .card:last-child:nth-child(odd) { grid-column: 1 / -1; } /* 3 cards: the last one spans the row */
   .top, main { padding-left: 20px; padding-right: 20px; }
   .tile { padding: 12px; }
   .tile-hint { display: none; }
 }
+/* Portrait tablets: two rows of cards, sized so Mix! stays on screen. */
+@media (max-width: 1023px) and (orientation: portrait) {
+  :root { --reel-h: clamp(150px, calc((100vh - 560px) / 2), 300px); }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card:last-child:nth-child(odd) { grid-column: 1 / -1; } /* 3 cards: the last one spans the row */
+}
+/* Landscape tablets and short windows keep one row, like a laptop. */
 
 /* ---------- Phone ---------- */
 /* A 2x2 grid of cards sized to the screen height, so Mix! never falls below the fold. */
