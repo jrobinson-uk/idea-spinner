@@ -4,6 +4,8 @@ A classroom warm-up for physical computing. Press the big red **Mix!** button an
 
 A fresh take on [idea_mixer](https://github.com/jrobinson-uk/idea_mixer) (2016), rebuilt to run in any browser.
 
+There's also a [BBC micro:bit version](microbit/) (`/microbit/`) with three cards that use only what's built into the micro:bit. See [microbit/README.md](microbit/README.md).
+
 ## Using it in a lesson
 
 - Open the page on the projector and press **Mix!**, or press **Space**.
@@ -24,7 +26,8 @@ Settings are remembered in your browser. Nothing is sent anywhere.
    ```
 
    - `wheel` is `input`, `process`, `output` or `materials`.
-   - `tags: ["ai"]` puts the item behind the AI toggle.
+   - `tags: ["ai"]` puts the item behind the AI toggle. The toggles themselves are the `options` list at the top of the file.
+   - Optional: `image` points to a picture somewhere else, and `layers` stacks several pictures on top of each other (the micro:bit site uses this).
 
 2. Add an illustration at `img/ingredients/<id>.svg`. The page finds it from the `id`.
 
@@ -46,7 +49,7 @@ It's plain HTML, CSS and JavaScript with no build step. It does need a local ser
 python3 -m http.server 8000
 ```
 
-Then open <http://localhost:8000>. The logic tests run at <http://localhost:8000/tests/picker.test.html>.
+Then open <http://localhost:8000> (or <http://localhost:8000/microbit/>). The logic tests run at <http://localhost:8000/tests/picker.test.html>, and with `?deck=microbit` for the micro:bit deck.
 
 ## How it works
 
@@ -60,4 +63,5 @@ Then open <http://localhost:8000>. The logic tests run at <http://localhost:8000
 ## Licence
 
 - Code: [MIT](LICENSE)
-- Illustrations: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- Illustrations in `img/`: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- micro:bit board artwork in `microbit/img/`: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), based on the Micro:bit Educational Foundation's drawing. See [microbit/README.md](microbit/README.md).

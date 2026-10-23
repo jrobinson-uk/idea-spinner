@@ -19,11 +19,26 @@ export function seededRandom(seed) {
   };
 }
 
-/** Ingredients allowed on a wheel, given the current settings. */
-export function poolFor(deck, wheelId, settings = {}) {
+/** Ingredients allowed on a wheel. `filter.excludeTags` lists tags to leave out, e.g. ["ai"]. */
+export function poolFor(deck, wheelId, filter = {}) {
+  const excluded = filter.excludeTags ?? [];
   return deck.filter(
-    (item) => item.wheel === wheelId && (settings.includeAI || !item.tags.includes("ai"))
+    (item) => item.wheel === wheelId && !(item.tags ?? []).some((tag) => excluded.includes(tag))
   );
+}
+
+/**
+ * Which tags to leave out, from the deck's options and the viewer's settings.
+ * An option normally includes its tag only when switched on (e.g. "Include AI");
+ * with `hides: true` it removes its tag when switched on (e.g. "V1 only" hides "v2").
+ */
+export function excludedTags(options = [], settings = {}) {
+  return options
+    .filter((opt) => {
+      const on = settings[opt.id] ?? opt.default ?? false;
+      return opt.hides ? on : !on;
+    })
+    .map((opt) => opt.tag);
 }
 
 export function choose(list, random = cryptoRandom) {
@@ -40,11 +55,11 @@ export function choose(list, random = cryptoRandom) {
  * @param {object[]} wheels    [{id, label}]
  * @param {Set<string>} locked wheel ids that are locked
  * @param {object} current     {wheelId: ingredient} currently shown (may be empty)
- * @param {object} settings    {includeAI}
+ * @param {object} filter      {excludeTags}
  * @param {function} random    () => [0, 1)
  * @returns {object} {wheelId: ingredient}
  */
-export function pick(deck, wheels, locked, current = {}, settings = {}, random = cryptoRandom) {
+export function pick(deck, wheels, locked, current = {}, filter = {}, random = cryptoRandom) {
   const result = {};
   const used = new Set();
 
@@ -57,7 +72,7 @@ export function pick(deck, wheels, locked, current = {}, settings = {}, random =
 
   for (const wheel of wheels) {
     if (result[wheel.id]) continue;
-    const pool = poolFor(deck, wheel.id, settings);
+    const pool = poolFor(deck, wheel.id, filter);
     const fresh = pool.filter(
       (item) => !used.has(item.id) && item.id !== current[wheel.id]?.id
     );

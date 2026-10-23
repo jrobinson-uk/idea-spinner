@@ -229,6 +229,42 @@ art = {
       <path d="M106 48h28v16l22 28v108a16 16 0 0 1-16 16h-40a16 16 0 0 1-16-16V92l22-28z" fill="#d6ecfa"/>
       <rect x="84" y="128" width="72" height="44" fill="{TEAL_L}"/>
       <path d="M100 104v14" stroke="{WHITE}" stroke-width="7"/>""",
+    # ---------------- Extra materials (micro:bit site) ----------------
+    "crocodile-clips": f"""
+      <path d="M26 206c20-30 50-40 70-70" stroke-width="14"/>
+      <path d="M26 206c20-30 50-40 70-70" stroke="{RED}" stroke-width="7"/>
+      <g transform="rotate(-45 120 110)">
+        <rect x="84" y="94" width="62" height="32" rx="10" fill="{RED}"/>
+        <path d="M146 100l30 6M146 120l30 -6" stroke-width="6"/>
+        <path d="M152 104l4 4M162 106l4 4M152 116l4 -4M162 114l4 -4" stroke-width="3"/>
+      </g>
+      <path d="M96 216c24-24 54-30 76-54" stroke-width="14"/>
+      <path d="M96 216c24-24 54-30 76-54" stroke="#3a3d55" stroke-width="7"/>
+      <g transform="rotate(-45 190 140)">
+        <rect x="154" y="124" width="62" height="32" rx="10" fill="#3a3d55"/>
+        <path d="M216 130l22 5M216 150l22 -5" stroke-width="6"/>
+      </g>""",
+    "battery-pack": f"""
+      <rect x="30" y="72" width="150" height="104" rx="14" fill="#3a3d55"/>
+      <rect x="44" y="86" width="112" height="32" rx="8" fill="{ORANGE}"/>
+      <rect x="44" y="130" width="112" height="32" rx="8" fill="{ORANGE}"/>
+      <path d="M156 96v12M156 140v12" stroke-width="8"/>
+      <path d="M64 102h16M72 94v16M64 146h16" stroke="{WHITE}" stroke-width="5"/>
+      <path d="M180 112c20 0 18 30 34 30" stroke="{RED}" stroke-width="5"/>
+      <path d="M180 132c14 0 14 18 30 18" stroke-width="5"/>
+      <rect x="204" y="132" width="18" height="26" rx="3" fill="{WHITE}"/>""",
+    "fruit": f"""
+      <path d="M52 62c-2 72 46 124 128 116c18-2 20-14 6-14c-60 2-96-40-104-102c-2-14-30-14-30 0z" fill="{YELLOW}"/>
+      <path d="M52 62l-6-18 22-4 4 18" fill="#8a5a2b"/>
+      <path d="M96 130c20 20 46 30 76 32" stroke="#d9a21b" stroke-width="5"/>""",
+    "playdough": f"""
+      <path d="M40 170c-8-30 14-56 44-52c16-26 58-24 66 6c30-2 46 28 30 50c-6 14-26 20-40 16c-20 12-50 12-66 0c-16 4-30-6-34-20z" fill="#ff7eb6"/>
+      <path d="M120 110c-6-24 14-44 38-40c14-18 48-12 52 12c20 6 22 34 4 44c-14 10-36 8-50 0c-16 6-38 0-44-16z" fill="{BLUE}"/>
+      <path d="M70 160c10 6 24 6 34 0M150 96c8 4 18 4 26 0" stroke="{WHITE}" stroke-width="5"/>""",
+    "lolly-sticks": f"""
+      <rect x="40" y="104" width="170" height="30" rx="15" fill="{BROWN_L}" transform="rotate(-30 125 119)"/>
+      <rect x="30" y="112" width="170" height="30" rx="15" fill="{BROWN}" transform="rotate(8 115 127)"/>
+      <rect x="50" y="124" width="170" height="30" rx="15" fill="{BROWN_L}" transform="rotate(32 135 139)"/>""",
 }
 
 for name, body in art.items():

@@ -1,5 +1,5 @@
-import { pick, poolFor, fillerStrip } from "./picker.js";
-import { Reel, imageFor } from "./reel.js";
+import { pick, poolFor, fillerStrip, excludedTags } from "./picker.js";
+import { Reel, artFor, setBadges } from "./reel.js";
 import { loadSettings, saveSettings } from "./settings.js";
 
 const STOP_TIMES = [1500, 2000, 2500, 3000];
@@ -18,7 +18,9 @@ let wheels = [];
 let reels = {};
 let current = {};
 const locked = new Set();
-let settings = loadSettings();
+let options = [];
+let storageKey;
+let settings = {};
 let spinning = false;
 
 // --- Sound (Web Audio, generated, no files) -----------------------------------
@@ -50,11 +52,15 @@ async function init() {
   const data = await fetch("data/ingredients.json").then((r) => r.json());
   deck = data.ingredients;
   wheels = data.wheels;
+  options = data.options ?? [];
+  storageKey = data.storageKey;
+  settings = loadSettings(storageKey);
+  setBadges(data.badges);
 
   buildCards();
   prompt.textContent = promptText();
 
-  current = pick(deck, wheels, locked, {}, settings);
+  current = pick(deck, wheels, locked, {}, filter());
   for (const wheel of wheels) reels[wheel.id].show(current[wheel.id]);
 
   mixButton.addEventListener("click", mix);
@@ -86,6 +92,11 @@ function buildCards() {
     container.append(card);
     reels[wheel.id] = new Reel($(".reel", card));
   }
+}
+
+/** Which ingredients are in play, given the deck's options and the viewer's settings. */
+function filter() {
+  return { excludeTags: excludedTags(options, settings) };
 }
 
 function promptText() {
@@ -120,12 +131,12 @@ async function mix() {
   announcer.textContent = "";
   document.body.classList.add("is-spinning");
 
-  const next = pick(deck, wheels, locked, current, settings);
+  const next = pick(deck, wheels, locked, current, filter());
   const toSpin = wheels.filter((w) => !locked.has(w.id));
 
   await Promise.all(
     toSpin.map((wheel, i) => {
-      const pool = poolFor(deck, wheel.id, settings);
+      const pool = poolFor(deck, wheel.id, filter());
       const duration = STOP_TIMES[i] ?? STOP_TIMES.at(-1);
       const length = Math.round(duration / 80);
       return reels[wheel.id]
@@ -147,10 +158,29 @@ async function mix() {
 // --- Settings -----------------------------------------------------------------
 
 function setupSettings() {
-  const aiToggle = $("#opt-ai");
   const soundToggle = $("#opt-sound");
-  aiToggle.checked = settings.includeAI;
   soundToggle.checked = settings.sound;
+
+  // One switch per deck option (e.g. "Include AI ingredients"), above the sound switch.
+  for (const opt of options) {
+    const label = document.createElement("label");
+    label.className = "toggle";
+    label.innerHTML = `
+      <input type="checkbox">
+      <span class="switch" aria-hidden="true"></span>
+      <span><strong></strong><br><small></small></span>`;
+    $("strong", label).textContent = opt.label;
+    $("small", label).textContent = opt.hint ?? "";
+    const input = $("input", label);
+    input.checked = settings[opt.id] ?? opt.default ?? false;
+    input.addEventListener("change", () => {
+      settings[opt.id] = input.checked;
+      saveSettings(settings, storageKey);
+      replaceExcluded();
+      renderDeck();
+    });
+    soundToggle.closest(".toggle").before(label);
+  }
 
   $("#open-settings").addEventListener("click", () => {
     renderDeck();
@@ -161,20 +191,31 @@ function setupSettings() {
     if (e.target === settingsDialog) settingsDialog.close(); // click on backdrop
   });
 
-  aiToggle.addEventListener("change", () => {
-    settings.includeAI = aiToggle.checked;
-    saveSettings(settings);
-    renderDeck();
-  });
   soundToggle.addEventListener("change", () => {
     settings.sound = soundToggle.checked;
-    saveSettings(settings);
+    saveSettings(settings, storageKey);
     if (settings.sound) chime(0);
   });
 }
 
+/** After an option changes, swap out any card showing an ingredient that's now left out. */
+function replaceExcluded() {
+  if (spinning) return; // the next mix will use the new setting
+  const excluded = filter().excludeTags;
+  const isOut = (item) => (item.tags ?? []).some((tag) => excluded.includes(tag));
+  const keep = new Set(wheels.filter((w) => !isOut(current[w.id])).map((w) => w.id));
+  if (keep.size === wheels.length) return;
+  const next = pick(deck, wheels, keep, current, filter());
+  for (const wheel of wheels) {
+    if (keep.has(wheel.id)) continue;
+    reels[wheel.id].show(next[wheel.id]);
+  }
+  current = next;
+}
+
 function renderDeck() {
   const container = $("#deck");
+  const excluded = filter().excludeTags;
   container.replaceChildren(
     ...wheels.map((wheel) => {
       const section = document.createElement("section");
@@ -185,10 +226,11 @@ function renderDeck() {
       const list = document.createElement("ul");
       for (const item of deck.filter((i) => i.wheel === wheel.id)) {
         const li = document.createElement("li");
-        const off = item.tags.includes("ai") && !settings.includeAI;
+        const off = (item.tags ?? []).some((tag) => excluded.includes(tag));
         li.className = off ? "off" : "";
-        li.innerHTML = `<img alt="" src="${imageFor(item)}"><span></span>`;
-        li.querySelector("span").textContent = item.name + (off ? " (off)" : "");
+        const name = document.createElement("span");
+        name.textContent = item.name + (off ? " (off)" : "");
+        li.append(artFor(item, "deck-img"), name);
         list.append(li);
       }
       section.append(heading, list);
