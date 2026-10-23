@@ -1,0 +1,49 @@
+{
+  "storageKey": "idea-spinner:microbit:settings",
+  "options": [
+    { "id": "v1Only", "label": "V1 micro:bit only", "hint": "Hide features that need a micro:bit V2 (microphone, speaker, touch logo, data logging)", "tag": "v2", "hides": true, "default": false }
+  ],
+  "badges": { "v2": "V2" },
+  "wheels": [
+    { "id": "input", "label": "Input / Sensor" },
+    { "id": "output", "label": "Output" },
+    { "id": "materials", "label": "Extra materials" }
+  ],
+  "ingredients": [
+    { "id": "buttons", "name": "Buttons A and B", "wheel": "input", "hint": "Press A, B or both together", "tags": [], "layers": ["img/board.svg", "img/highlights/buttons.svg"] },
+    { "id": "touch-logo", "name": "Touch logo", "wheel": "input", "hint": "Senses a finger on the gold logo", "tags": ["v2"], "layers": ["img/board.svg", "img/highlights/touch-logo.svg"] },
+    { "id": "touch-pins", "name": "Touch pins", "wheel": "input", "hint": "Senses touch on pins 0, 1 and 2", "tags": [], "layers": ["img/board.svg", "img/highlights/touch-pins.svg"] },
+    { "id": "light-level", "name": "Light level", "wheel": "input", "hint": "The LED display senses how bright it is", "tags": [], "layers": ["img/board.svg", "img/highlights/light-level.svg"] },
+    { "id": "temperature", "name": "Temperature", "wheel": "input", "hint": "Senses roughly how warm it is", "tags": [], "layers": ["img/board.svg", "img/highlights/temperature.svg"] },
+    { "id": "microphone", "name": "Microphone", "wheel": "input", "hint": "Senses how loud it is", "tags": ["v2"], "layers": ["img/board-mic.svg", "img/highlights/microphone.svg"] },
+    { "id": "tilt", "name": "Tilt", "wheel": "input", "hint": "Senses which way it's tilted", "tags": [], "layers": ["img/board.svg", "img/highlights/tilt.svg"] },
+    { "id": "shake", "name": "Shake", "wheel": "input", "hint": "Senses being shaken", "tags": [], "layers": ["img/board.svg", "img/highlights/shake.svg"] },
+    { "id": "free-fall", "name": "Free fall", "wheel": "input", "hint": "Senses when it's falling", "tags": [], "layers": ["img/board.svg", "img/highlights/free-fall.svg"] },
+    { "id": "compass", "name": "Compass", "wheel": "input", "hint": "Senses which way is north", "tags": [], "layers": ["img/board.svg", "img/highlights/compass.svg"] },
+    { "id": "magnet", "name": "Magnet detector", "wheel": "input", "hint": "Senses a magnet nearby", "tags": [], "layers": ["img/board.svg", "img/highlights/magnet.svg"] },
+    { "id": "radio-receive", "name": "Radio: receive", "wheel": "input", "hint": "Gets messages from other micro:bits", "tags": [], "layers": ["img/board.svg", "img/highlights/radio-receive.svg"] },
+    { "id": "signal-strength", "name": "Radio signal strength", "wheel": "input", "hint": "Roughly how close another micro:bit is", "tags": [], "layers": ["img/board.svg", "img/highlights/signal-strength.svg"] },
+    { "id": "phone-control", "name": "Phone control", "wheel": "input", "hint": "Control it from a phone or tablet app over Bluetooth", "tags": [], "layers": ["img/board.svg", "img/highlights/phone-control.svg"] },
+
+    { "id": "led-pictures", "name": "LED pictures", "wheel": "output", "hint": "Shows icons and patterns on the 5×5 display", "tags": [], "layers": ["img/board.svg", "img/highlights/led-pictures.svg"] },
+    { "id": "scrolling-text", "name": "Scrolling text", "wheel": "output", "hint": "Scrolls words and numbers across the display", "tags": [], "layers": ["img/board.svg", "img/highlights/scrolling-text.svg"] },
+    { "id": "music", "name": "Music", "wheel": "output", "hint": "Plays tunes on the built-in speaker", "tags": ["v2"], "layers": ["img/board.svg", "img/highlights/music.svg"] },
+    { "id": "sound-effects", "name": "Sound effects", "wheel": "output", "hint": "Giggles, yawns and other sounds", "tags": ["v2"], "layers": ["img/board.svg", "img/highlights/sound-effects.svg"] },
+    { "id": "radio-send", "name": "Radio: send", "wheel": "output", "hint": "Sends messages to other micro:bits", "tags": [], "layers": ["img/board.svg", "img/highlights/radio-send.svg"] },
+    { "id": "phone-send", "name": "Send to a phone", "wheel": "output", "hint": "Sends readings to a phone or tablet app over Bluetooth", "tags": [], "layers": ["img/board.svg", "img/highlights/phone-send.svg"] },
+    { "id": "data-logging", "name": "Data logging", "wheel": "output", "hint": "Records readings to look at later", "tags": ["v2"], "layers": ["img/board.svg", "img/highlights/data-logging.svg"] },
+    { "id": "send-to-computer", "name": "Send to a computer", "wheel": "output", "hint": "Sends data over USB to graph on screen", "tags": [], "layers": ["img/board.svg", "img/highlights/send-to-computer.svg"] },
+
+    { "id": "crocodile-clips", "name": "Crocodile clips", "wheel": "materials", "hint": "Connect the pins to anything", "tags": [], "image": "../img/ingredients/crocodile-clips.svg" },
+    { "id": "battery-pack", "name": "Battery pack", "wheel": "materials", "hint": "Take your project away from the computer", "tags": [], "image": "../img/ingredients/battery-pack.svg" },
+    { "id": "tin-foil", "name": "Tin foil", "wheel": "materials", "hint": "Shiny, bendy and conducts electricity", "tags": [], "image": "../img/ingredients/tin-foil.svg" },
+    { "id": "fruit", "name": "Fruit", "wheel": "materials", "hint": "Bananas conduct: turn fruit into touch buttons", "tags": [], "image": "../img/ingredients/fruit.svg" },
+    { "id": "playdough", "name": "Playdough", "wheel": "materials", "hint": "Squishy, mouldable and conducts electricity", "tags": [], "image": "../img/ingredients/playdough.svg" },
+    { "id": "cardboard", "name": "Cardboard", "wheel": "materials", "hint": "Cut, fold and build with it", "tags": [], "image": "../img/ingredients/cardboard.svg" },
+    { "id": "paperclips", "name": "Paperclips", "wheel": "materials", "hint": "Bend them, link them, conduct with them", "tags": [], "image": "../img/ingredients/paperclips.svg" },
+    { "id": "bricks", "name": "Building bricks", "wheel": "materials", "hint": "Build a body, a case or a machine", "tags": [], "image": "../img/ingredients/bricks.svg" },
+    { "id": "string", "name": "String", "wheel": "materials", "hint": "Pull, hang, tie or measure", "tags": [], "image": "../img/ingredients/string.svg" },
+    { "id": "plastic-bottle", "name": "Plastic bottle", "wheel": "materials", "hint": "Hold water, make a body, recycle it", "tags": [], "image": "../img/ingredients/plastic-bottle.svg" },
+    { "id": "lolly-sticks", "name": "Lolly sticks", "wheel": "materials", "hint": "Levers, frames and little structures", "tags": [], "image": "../img/ingredients/lolly-sticks.svg" }
+  ]
+}

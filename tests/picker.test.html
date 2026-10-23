@@ -15,19 +15,26 @@
   <p id="summary">Running…</p>
   <ul id="results"></ul>
   <script type="module">
-    import { pick, poolFor, fillerStrip, seededRandom } from "../js/picker.js";
+    import { pick, poolFor, fillerStrip, seededRandom, excludedTags } from "../js/picker.js";
 
-    const data = await fetch("../data/ingredients.json").then((r) => r.json());
+    // ?deck=microbit tests the micro:bit sub-site's deck instead of the main one.
+    const site = new URLSearchParams(location.search).get("deck");
+    const base = site ? `../${site}/` : "../";
+    document.querySelector("h1").textContent += site ? ` (${site})` : " (main)";
+    const data = await fetch(`${base}data/ingredients.json`).then((r) => r.json());
     const { ingredients: deck, wheels } = data;
+    const options = data.options ?? [];
     const results = [];
-    const test = (name, fn) => {
-      try { fn(); results.push([name, true]); }
+    const test = async (name, fn) => {
+      try { await fn(); results.push([name, true]); }
       catch (e) { results.push([name, false, e.message]); }
     };
     const assert = (cond, msg) => { if (!cond) throw new Error(msg); };
     const ids = (combo) => wheels.map((w) => combo[w.id].id);
+    const everything = { excludeTags: [] };
+    const tagged = (tag) => deck.filter((i) => (i.tags ?? []).includes(tag));
 
-    test("every ingredient has a known wheel and an image file name", () => {
+    await test("every ingredient has a known wheel and a valid id", () => {
       const wheelIds = new Set(wheels.map((w) => w.id));
       for (const i of deck) {
         assert(wheelIds.has(i.wheel), `${i.id} has unknown wheel ${i.wheel}`);
@@ -36,70 +43,91 @@
       assert(new Set(deck.map((i) => i.id)).size === deck.length, "duplicate ids");
     });
 
-    test("each wheel's item comes from that wheel", () => {
+    await test("every picture file exists", async () => {
+      const missing = [];
+      for (const i of deck) {
+        for (const src of i.layers ?? [i.image ?? `img/ingredients/${i.id}.svg`]) {
+          const res = await fetch(base + src, { method: "HEAD" });
+          if (!res.ok) missing.push(`${i.id}: ${src}`);
+        }
+      }
+      assert(!missing.length, missing.join(", "));
+    });
+
+    await test("each wheel's item comes from that wheel", () => {
       const rnd = seededRandom(1);
       for (let n = 0; n < 500; n++) {
-        const combo = pick(deck, wheels, new Set(), {}, {}, rnd);
+        const combo = pick(deck, wheels, new Set(), {}, everything, rnd);
         for (const w of wheels) assert(combo[w.id].wheel === w.id, `${combo[w.id].id} on ${w.id}`);
       }
     });
 
-    test("no item appears twice in one combination", () => {
+    await test("no item appears twice in one combination", () => {
       const rnd = seededRandom(2);
       for (let n = 0; n < 500; n++) {
-        const combo = pick(deck, wheels, new Set(), {}, {}, rnd);
+        const combo = pick(deck, wheels, new Set(), {}, everything, rnd);
         assert(new Set(ids(combo)).size === wheels.length, ids(combo).join());
       }
     });
 
-    test("AI items never appear when the toggle is off", () => {
-      const rnd = seededRandom(3);
-      for (let n = 0; n < 1000; n++) {
-        const combo = pick(deck, wheels, new Set(), {}, { includeAI: false }, rnd);
-        for (const w of wheels) assert(!combo[w.id].tags.includes("ai"), combo[w.id].id);
+    for (const opt of options) {
+      await test(`option "${opt.label}": its items only appear when they should`, () => {
+        assert(tagged(opt.tag).length, `no items tagged ${opt.tag}`);
+        for (const on of [false, true]) {
+          const filter = { excludeTags: excludedTags(options, { [opt.id]: on }) };
+          const shouldShow = opt.hides ? !on : on;
+          const rnd = seededRandom(on ? 3 : 4);
+          let seen = 0;
+          for (let n = 0; n < 1000; n++) {
+            const combo = pick(deck, wheels, new Set(), {}, filter, rnd);
+            seen += wheels.filter((w) => (combo[w.id].tags ?? []).includes(opt.tag)).length;
+          }
+          assert(shouldShow ? seen > 0 : seen === 0, `${opt.id}=${on}: saw ${seen} "${opt.tag}" items`);
+        }
+      });
+    }
+
+    await test("the default settings leave every wheel with at least 3 items", () => {
+      const filter = { excludeTags: excludedTags(options, {}) };
+      for (const w of wheels) {
+        const n = poolFor(deck, w.id, filter).length;
+        assert(n >= 3, `${w.id} has only ${n}`);
       }
     });
 
-    test("AI items do appear when the toggle is on", () => {
-      const rnd = seededRandom(4);
-      const seen = new Set();
-      for (let n = 0; n < 1000; n++) {
-        const combo = pick(deck, wheels, new Set(), {}, { includeAI: true }, rnd);
-        for (const w of wheels) seen.add(combo[w.id].id);
-      }
-      assert(seen.has("ai-classifier") && seen.has("generative-ai"), "AI items never picked");
-    });
-
-    test("locked wheels never change", () => {
+    await test("locked wheels never change", () => {
       const rnd = seededRandom(5);
-      let combo = pick(deck, wheels, new Set(), {}, {}, rnd);
-      const locked = new Set(["input", "materials"]);
+      let combo = pick(deck, wheels, new Set(), {}, everything, rnd);
+      const lockedIds = [wheels[0].id, wheels.at(-1).id];
       for (let n = 0; n < 300; n++) {
-        const next = pick(deck, wheels, locked, combo, {}, rnd);
-        assert(next.input === combo.input && next.materials === combo.materials, "locked item changed");
+        const next = pick(deck, wheels, new Set(lockedIds), combo, everything, rnd);
+        for (const id of lockedIds) assert(next[id] === combo[id], `locked ${id} changed`);
         combo = next;
       }
     });
 
-    test("unlocked wheels always change on a re-spin", () => {
+    await test("unlocked wheels always change on a re-spin", () => {
       const rnd = seededRandom(6);
-      let combo = pick(deck, wheels, new Set(), {}, {}, rnd);
+      const lockedId = wheels[1].id;
+      let combo = pick(deck, wheels, new Set(), {}, everything, rnd);
       for (let n = 0; n < 500; n++) {
-        const next = pick(deck, wheels, new Set(["output"]), combo, {}, rnd);
-        assert(next.input.id !== combo.input.id && next.materials.id !== combo.materials.id && next.process.id !== combo.process.id, "repeat");
+        const next = pick(deck, wheels, new Set([lockedId]), combo, everything, rnd);
+        for (const w of wheels) {
+          if (w.id !== lockedId) assert(next[w.id].id !== combo[w.id].id, `${w.id} repeated`);
+        }
         combo = next;
       }
     });
 
-    test("items come up roughly evenly over 1,000 spins", () => {
+    await test("items come up roughly evenly over 1,000 spins", () => {
       const counts = {};
       const rnd = seededRandom(7);
       for (let n = 0; n < 1000; n++) {
-        const combo = pick(deck, wheels, new Set(), {}, {}, rnd);
+        const combo = pick(deck, wheels, new Set(), {}, everything, rnd);
         for (const w of wheels) counts[combo[w.id].id] = (counts[combo[w.id].id] ?? 0) + 1;
       }
       for (const w of wheels) {
-        const pool = poolFor(deck, w.id, {});
+        const pool = poolFor(deck, w.id, everything);
         const expected = 1000 / pool.length;
         for (const item of pool) {
           const c = counts[item.id] ?? 0;
@@ -108,8 +136,8 @@
       }
     });
 
-    test("filler strip never repeats back-to-back", () => {
-      const strip = fillerStrip(poolFor(deck, "input", {}), 200, seededRandom(8));
+    await test("filler strip never repeats back-to-back", () => {
+      const strip = fillerStrip(poolFor(deck, wheels[0].id, everything), 200, seededRandom(8));
       for (let i = 1; i < strip.length; i++) assert(strip[i] !== strip[i - 1], `repeat at ${i}`);
     });
 

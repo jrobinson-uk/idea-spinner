@@ -1,4 +1,7 @@
 {
+  "options": [
+    { "id": "includeAI", "label": "Include AI ingredients", "hint": "Adds an AI classifier (input) and generative AI (output)", "tag": "ai", "default": false }
+  ],
   "wheels": [
     { "id": "input", "label": "Input" },
     { "id": "process", "label": "Process" },

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Idea Spinner: BBC micro:bit built-ins</title>
+  <meta name="description" content="Mix a built-in input, a built-in output and an extra material for the BBC micro:bit, then pitch a project that uses them all.">
+  <link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script type="module" src="../js/main.js"></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="icon-lock-open" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 7.6-1.7"/></symbol>
+    <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="icon-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.6"/><path d="M19.00 12.00L22.20 12.00M16.95 16.95L19.21 19.21M12.00 19.00L12.00 22.20M7.05 16.95L4.79 19.21M5.00 12.00L1.80 12.00M7.05 7.05L4.79 4.79M12.00 5.00L12.00 1.80M16.95 7.05L19.21 4.79" stroke-width="3.6" stroke-linecap="butt"/></symbol>
+  </svg>
+
+  <header class="top">
+    <h1>Idea Spinner</h1>
+    <a class="site-link" href="../"><span class="long">← More boards and parts</span><span class="short">← All boards</span></a>
+    <button id="open-settings" class="icon-button" type="button" aria-label="Settings and ingredient list">
+      <svg aria-hidden="true"><use href="#icon-gear"/></svg>
+    </button>
+  </header>
+
+  <main>
+    <p class="intro">Everything here is built into the BBC micro:bit. Mix, then pitch a project that uses them all.</p>
+
+    <div class="cards" id="cards"></div>
+
+    <template id="card-template">
+      <section class="card">
+        <div class="card-head">
+          <h2></h2>
+          <button class="lock" type="button" aria-pressed="false">
+            <svg class="open" aria-hidden="true"><use href="#icon-lock-open"/></svg>
+            <svg class="shut" aria-hidden="true"><use href="#icon-lock"/></svg>
+          </button>
+        </div>
+        <div class="reel"><div class="strip"></div></div>
+      </section>
+    </template>
+
+    <p id="prompt" class="prompt"></p>
+
+    <div class="controls">
+      <button id="mix" class="mix" type="button">
+        <span class="mix-top">Mix!</span>
+      </button>
+      <p id="mix-hint" class="mix-hint" hidden>Unlock a card to mix</p>
+      <p class="key-hint">or press <kbd>Space</kbd></p>
+    </div>
+
+    <p id="announcer" class="visually-hidden" aria-live="polite"></p>
+  </main>
+
+  <footer class="credits">
+    micro:bit board drawing © <a href="https://microbit.org">Micro:bit Educational Foundation</a>,
+    from <a href="https://github.com/microbit-foundation/microbit-svg">microbit-svg</a>,
+    used under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> with highlights added.
+    This page is not made by or affiliated with the Micro:bit Educational Foundation.
+  </footer>
+
+  <dialog id="settings" aria-labelledby="settings-title">
+    <div class="dialog-inner">
+      <div class="dialog-head">
+        <h2 id="settings-title">Settings</h2>
+        <button id="close-settings" class="close" type="button" aria-label="Close settings">×</button>
+      </div>
+
+      <label class="toggle">
+        <input id="opt-sound" type="checkbox">
+        <span class="switch" aria-hidden="true"></span>
+        <span><strong>Sound effects</strong><br><small>A gentle tick while mixing and a chime when cards land</small></span>
+      </label>
+
+      <h2 class="deck-title">All ingredients</h2>
+      <div id="deck" class="deck"></div>
+    </div>
+  </dialog>
+</body>
+</html>

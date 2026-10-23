@@ -2,19 +2,48 @@
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-export function imageFor(item) {
-  return `img/ingredients/${item.id}.svg`;
+let badgeLabels = {};
+
+/** Tags that show as a small badge on a card, e.g. {"v2": "V2"}. */
+export function setBadges(labels = {}) {
+  badgeLabels = labels;
+}
+
+/**
+ * An ingredient's picture. Most are one SVG at img/ingredients/<id>.svg;
+ * `image` points somewhere else, and `layers` stacks several images
+ * (e.g. a board drawing plus a highlight) on top of each other.
+ */
+export function artFor(item, className = "tile-img") {
+  const sources = item.layers ?? [item.image ?? `img/ingredients/${item.id}.svg`];
+  const art = document.createElement("span");
+  art.className = `art ${className}${sources.length > 1 ? " layered" : ""}`;
+  for (const src of sources) {
+    const img = document.createElement("img");
+    img.alt = "";
+    img.draggable = false;
+    img.src = src;
+    art.append(img);
+  }
+  return art;
 }
 
 function tile(item) {
   const el = document.createElement("div");
   el.className = "tile";
   el.innerHTML = `
-    <img class="tile-img" alt="" draggable="false">
     <p class="tile-name"></p>
     <p class="tile-hint"></p>`;
-  el.querySelector(".tile-img").src = imageFor(item);
-  el.querySelector(".tile-name").textContent = item.name;
+  el.prepend(artFor(item));
+  const name = el.querySelector(".tile-name");
+  name.textContent = item.name;
+  for (const tag of item.tags ?? []) {
+    if (!badgeLabels[tag]) continue;
+    const badge = document.createElement("span");
+    badge.className = "badge";
+    badge.textContent = badgeLabels[tag];
+    name.append(" ", badge);
+  }
   el.querySelector(".tile-hint").textContent = item.hint;
   return el;
 }
