@@ -15,7 +15,7 @@ There's also a [BBC micro:bit version](microbit/) (`/microbit/`) with three card
   - **Sound effects** (off by default).
   - A list of every ingredient, for planning or as a key.
 
-Settings are remembered in your browser. Nothing is sent anywhere.
+Settings are remembered in your browser. Nothing is sent anywhere: the page loads only its own files, including the font.
 
 ## Adding or changing ingredients
 
@@ -64,4 +64,5 @@ Then open <http://localhost:8000> (or <http://localhost:8000/microbit/>). The lo
 
 - Code: [MIT](LICENSE)
 - Illustrations in `img/`: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
-- micro:bit board artwork in `microbit/img/`: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), based on the Micro:bit Educational Foundation's drawing. See [microbit/README.md](microbit/README.md).
+- micro:bit board artwork in `microbit/img/`: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), non-commercial use only, based on the Micro:bit Educational Foundation's drawing. See [microbit/img/LICENSE.md](microbit/img/LICENSE.md).
+- [Inclusive Sans](https://github.com/LivKing/Inclusive-Sans) font in `fonts/`: [SIL Open Font License 1.1](fonts/OFL.txt)

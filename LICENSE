@@ -19,3 +19,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+The MIT licence above covers the code only. Other parts of this repository
+have their own licences:
+
+- Illustrations in img/: CC BY-SA 4.0
+  https://creativecommons.org/licenses/by-sa/4.0/
+- micro:bit board artwork in microbit/img/: CC BY-NC-SA 4.0, based on the
+  Micro:bit Educational Foundation's drawing. Non-commercial use only.
+  See microbit/img/LICENSE.md.
+- Inclusive Sans font in fonts/: SIL Open Font License 1.1. See fonts/OFL.txt.

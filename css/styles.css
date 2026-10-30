@@ -1,3 +1,12 @@
+/* Hosted here rather than on Google Fonts, so visiting the page sends nothing anywhere. */
+@font-face {
+  font-family: "Inclusive Sans";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("../fonts/inclusive-sans-latin.woff2") format("woff2");
+}
+
 /* ---------- Tokens ---------- */
 :root {
   --bg: #fbf7f0;
