@@ -14,8 +14,28 @@ export function setBadges(labels = {}) {
  * `image` points somewhere else, and `layers` stacks several images
  * (e.g. a board drawing plus a highlight) on top of each other.
  */
+function sourcesFor(item) {
+  return item.layers ?? [item.image ?? `img/ingredients/${item.id}.svg`];
+}
+
+const preloaded = [];
+
+/**
+ * Fetch and decode every picture up front, so a card never lands on a
+ * picture that is still loading. Keeping the images stops them being dropped.
+ */
+export function preload(items) {
+  const sources = new Set(items.flatMap(sourcesFor));
+  for (const src of sources) {
+    const img = new Image();
+    img.src = src;
+    img.decode().catch(() => {}); // a missing file just shows as blank, as before
+    preloaded.push(img);
+  }
+}
+
 export function artFor(item, className = "tile-img") {
-  const sources = item.layers ?? [item.image ?? `img/ingredients/${item.id}.svg`];
+  const sources = sourcesFor(item);
   const art = document.createElement("span");
   art.className = `art ${className}${sources.length > 1 ? " layered" : ""}`;
   for (const src of sources) {
@@ -58,9 +78,13 @@ export class Reel {
 
   /** Show an item immediately, with no animation. */
   show(item) {
+    this.land(item, tile(item));
+  }
+
+  land(item, tileEl) {
     this.item = item;
+    this.strip.replaceChildren(tileEl);
     this.strip.getAnimations().forEach((a) => a.cancel());
-    this.strip.replaceChildren(tile(item));
     this.strip.style.transform = "";
   }
 
@@ -101,7 +125,9 @@ export class Reel {
     await anim.finished;
     this.windowEl.classList.remove("spinning");
     this.windowEl.removeAttribute("aria-hidden");
-    this.show(target);
+    // Keep the tile that's already on screen rather than building a new one,
+    // whose picture would have to load and paint again.
+    this.land(target, this.strip.lastElementChild);
     this.settle();
   }
 

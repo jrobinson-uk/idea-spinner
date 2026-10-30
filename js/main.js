@@ -1,5 +1,5 @@
 import { pick, poolFor, fillerStrip, excludedTags } from "./picker.js";
-import { Reel, artFor, setBadges } from "./reel.js";
+import { Reel, artFor, preload, setBadges } from "./reel.js";
 import { loadSettings, saveSettings } from "./settings.js";
 
 const STOP_TIMES = [1500, 2000, 2500, 3000];
@@ -56,6 +56,7 @@ async function init() {
   storageKey = data.storageKey;
   settings = loadSettings(storageKey);
   setBadges(data.badges);
+  preload(deck);
 
   buildCards();
   prompt.textContent = promptText();

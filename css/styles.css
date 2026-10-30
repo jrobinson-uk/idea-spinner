@@ -245,7 +245,8 @@ main {
 .reel.spinning::before { top: 0; background: linear-gradient(var(--tint), transparent); }
 .reel.spinning::after { bottom: 0; background: linear-gradient(transparent, var(--tint)); }
 
-.strip { will-change: transform; }
+/* Only while moving: Safari can skip repainting pictures in a layer that keeps this hint. */
+.reel.spinning .strip { will-change: transform; }
 
 .tile {
   height: var(--reel-h);
