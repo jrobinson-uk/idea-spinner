@@ -124,6 +124,12 @@ function updateMixState() {
 
 // --- Mixing -------------------------------------------------------------------
 
+/** Count Mix! presses in GoatCounter, if it loaded (blockers and school filters often stop it). */
+function countMix() {
+  const path = location.pathname.includes("/microbit/") ? "mix-microbit" : "mix";
+  window.goatcounter?.count?.({ path, title: "Mix! pressed", event: true });
+}
+
 async function mix() {
   if (spinning || locked.size === wheels.length) return;
   spinning = true;
@@ -131,6 +137,8 @@ async function mix() {
   prompt.classList.remove("show");
   announcer.textContent = "";
   document.body.classList.add("is-spinning");
+
+  countMix();
 
   const next = pick(deck, wheels, locked, current, filter());
   const toSpin = wheels.filter((w) => !locked.has(w.id));

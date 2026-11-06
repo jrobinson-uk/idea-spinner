@@ -15,7 +15,7 @@ There's also a [BBC micro:bit version](microbit/) (`/microbit/`) with three card
   - **Sound effects** (off by default).
   - A list of every ingredient, for planning or as a key.
 
-Settings are remembered in your browser. Nothing is sent anywhere: the page loads only its own files, including the font.
+Settings are remembered in your browser and never leave it. See [Privacy](#privacy) for the anonymous visit counts.
 
 ## Adding or changing ingredients
 
@@ -59,6 +59,16 @@ Then open <http://localhost:8000> (or <http://localhost:8000/microbit/>). The lo
 | `js/reel.js` | Animates one card's strip to its target, or cross-fades when "reduce motion" is on. |
 | `js/main.js` | Wires up the button, keyboard, locks, settings and screen-reader announcements. |
 | `js/settings.js` | Saves settings to `localStorage` safely. |
+
+## Privacy
+
+The site counts visits with [GoatCounter](https://www.goatcounter.com), so we can see how much it's used.
+
+- **Counted:** page views, presses of **Mix!**, the page that linked here, and the visitor's browser, operating system, screen width, language and country.
+- **Not collected:** names, accounts or anything typed in. There are no cookies and no tracking across other sites, which is why there's no cookie banner. GoatCounter's own view is that it doesn't need one under GDPR.
+- **Not counted at all:** what the cards land on, or the settings you choose.
+
+GoatCounter doesn't store IP addresses, and doesn't share anything with third parties. See [GoatCounter's privacy policy](https://www.goatcounter.com/help/privacy). If a browser or school network blocks it, the site works exactly the same.
 
 ## Licence
 
